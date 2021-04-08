@@ -53,14 +53,14 @@ The tweets will be posted in Slack like this:
 <img src="images/slack2.png">
 
 ### Tech used:
-  Python
-  Docker
-  MongoDB
-  PostgreSQL
-  SQLAlchemy
-  pymongo
-  VaderSentiment
-  Slack
+    Python
+    Docker
+    MongoDB
+    PostgreSQL
+    SQLAlchemy
+    pymongo
+    VaderSentiment
+    Slack
 
 ## License
 
