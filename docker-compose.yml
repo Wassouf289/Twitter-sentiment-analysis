@@ -1,0 +1,51 @@
+# Central file in a docker-compose pipeline
+# Defines the containers of the pipeline and some environment variables and configuration information
+
+version: '3.1' # Version of Docker Compose
+
+# Each service is a container
+services:
+  # 1. Container
+  tweet_collector: # Name of the service
+    build: tweet_collector/ # Build the container using an Docker image definition that is in the directory tweet_collector
+    volumes:
+      - ./tweet_collector/:/app # volumes creates a synchronization between your local directory ./tweet_collector with the container directory
+    # /app
+    depends_on: # depends_on tells docker-compose to start the service mongodb before the current service;
+      - mongodb
+  # 2. Container
+  mongodb: # Name of the service
+    image: mongo # In this case we are telling docker to pull a predefined image from Docker-Hub
+    ports: # Define port of the MongoDB database on_local_machine:inside_of_container
+      - 27018:27017 # on_local_machine:inside_of_container
+
+  # 3. Container
+  etl_job:
+    build: etl_job/
+    volumes: 
+      - ./etl_job/:/app
+    depends_on:
+      - mongodb
+      - postgresdb
+
+  # 4. Container
+  postgresdb: 
+    image: postgres
+    ports:
+      - 5555:5432
+    environment: 
+      POSTGRES_USER: docker_postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tweets_db  
+
+ 
+
+
+  # 5. Container
+  slackbot: 
+    build: slackbot/
+    volumes:
+      - ./slackbot/:/app
+    depends_on:
+      - mongodb
+      - postgresdb
